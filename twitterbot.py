@@ -1,22 +1,23 @@
 import sys, os, random, glob, codecs
-from twython import Twython
+from twython import Twython,TwythonError
 
-_consumer_key =
-_consumer_secret =
-_access_token =
-_access_token_secret =
+_consumer_key = ''
+_consumer_secret = ''
+_access_token = ''
+_access_token_secret = ''
 
 _location = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 _api = Twython(_consumer_key, _consumer_secret, _access_token, _access_token_secret) 
 
-_working_folder = 'Working'
+_working_folder = '/home/alarm/DMS/sync'
 _hashtag = '#DISARMnado'
 
 def randomtweet():
 	try:
 		_randfile = random.choice(glob.glob1(_working_folder, '*.txt'))
-
+		if _randfile[0:3] == 'Map':
+			return None
 		_format, _ttl, _type, _source, _destination, _lat, _long, _datetime, _group = _randfile.split('_')
 
 		_tweetsfile = codecs.open(os.path.join(_location, _working_folder, _randfile), encoding='utf-8', mode='r')
@@ -30,7 +31,10 @@ def randomtweet():
 		_api.update_status(status=_status)
 
 		return None
-
+	except TwythonError:
+		return None
+	except IndexError:
+	    	return None
 	except IOError:
 		return None
 
